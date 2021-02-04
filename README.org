@@ -1,0 +1,72 @@
+#+Title: DB Docs
+
+Document your database tables and fields, because you should, and this
+makes it easy.
+
+DBDocs enables you to describe your database in a simple ORG file,
+which is easy and nice to edit, view, and search in your repo, and
+even view in your SQL client.
+
+It works by converting a very minimal ORG-valid and -prescribed syntax
+into =COMMENT ON= statements, which can be run on your database (via
+migration or however you like).
+
+#+html: <p align="center"><img src="postico.png" /></p>
+
+** Example
+
+The following translation is done, from:
+
+#+begin_src org
+#+Title: ACME Corp Customer Database
+
+* customer
+
+The monster that holds the precious user profiles. Used by the traffic
+light table to track which users …
+
+- email ::
+  The primary contact, taken from Salesforce’s
+  =Project.Primary_Contact=. This is redundant with our =lead.contacs=
+  data.
+
+- email-data-json :: ...
+
+* order
+
+Every purchase made by =customer=s through the old portal. Note that
+new purchases by customer through all other systems is recorded in the
+=order2= table!
+
+* ops-user
+
+DEPRECATED: replaced by =agent=
+#+end_src
+
+to:
+
+#+begin_src sql
+COMMENT ON TABLE customer IS 'The monster …';
+COMMENT ON COLUMN customer.email IS 'The primary contact, …';
+#+end_src
+
+** Process
+
+- Create a .org file in your repo, eg, =docs/dbdocs.org=.
+
+- Describe as many tables and columns as you see fit.
+
+-
+
+** Transformations
+
+Org uses underscores for italic, and it’s tedious enough to have wrap
+every DB entity in equals (+=+) in org to escape them, so they should
+instead be documented with hyphens (+-+). IOW, all ORG hyphenated
+variables (eg, =my-var-name=) become underscores in SQL
+(=my_var_name=). So always use =my-var-name= in the ORG description.
+
+The parser is really dumb and wants to see a _table_ description for
+every table you wish to document. So, if you want to document some
+column in a table, you must also provide at least a tidbit sentence
+for the table too.
