@@ -1,21 +1,22 @@
 #!/usr/bin/env bb
 
-(require '[clojure.java.shell :refer [sh]])
-(require '[clojure.pprint :as pp])
+;; Convert a simple ORG file into SQL COMMENTs for documenting tables
+;; and their columns.
 
-(def sql-file  (or (System/getenv "DBDOCS_SQL")   "resources/migrations/dbdocs.sql"))
-(def org-file  (or (System/getenv "DBDOCS_ORG")   "docs/dbdocs.org"))
-(def html-file (or (System/getenv "DBDOCS_HTML")  "docs/dbdocs.html"))
+;; Default files for user to contigure
+(def sql-file  (or (System/getenv "DBDOCS_SQL")  "resources/migrations/dbdocs.sql"))
+(def org-file  (or (System/getenv "DBDOCS_ORG")  "docs/dbdocs.org"))
+(def html-file (or (System/getenv "DBDOCS_HTML") "docs/dbdocs.html"))
+
+
+;;; Translation
 
 (defn check-dir [f]
-  (println "Checking:" f)
+  ;; (println "Checking for existence of directory:" f)
   (let [dir (.getParent (io/file f))]
     (when-not (.isDirectory (io/file dir))
       (println "ERROR:" dir "directory does not exist.")
       (System/exit 1))))
-
-;; (doall (map check-dir [sql-file org-file html-file]))
-;; (doseq [d [sql-file org-file html-file]] (check-dir d))
 
 (defn process-col
   "Convert a column description into a SQL COMMENT.
@@ -42,7 +43,6 @@
 (defn print-comments
   "Write all SQL comments to `sql-file`."
   [title comments]
-  (println "Writing comment SQL to" sql-file)
   (binding [*out* (io/writer sql-file)]
     (println title)
     (doseq [c comments]
@@ -50,10 +50,11 @@
       (doseq [i c]
         (println i)))))
 
-;;; ----------------------------------------------------------------------
+
+;;; Main
 
 ;; To test, set DBDOCS_ORG=example.org
-(println "Reading ORG input file:" org-file)
+(println "Reading ORG descriptions input file:" org-file)
 (def org (slurp org-file))
 (def title
   (str/replace (first (str/split org #"\n\n+"))
@@ -61,12 +62,7 @@
 
 (def sections (rest (str/split org #"(?m)^\* ")))
 
-;; (process-section (first sections))
 (def comments (mapv process-section sections))
-;; (pp/pprint comments)
 
+(println "Writing SQL comments output file:" sql-file)
 (print-comments title comments)
-
-
-;; (pp/pprint sections)
-;; (str/join "/" ["foo" "bar"])
