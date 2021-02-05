@@ -107,3 +107,12 @@ precisely.
 
 It you use “straight” apostrophes (='=), they’ll be converted to
 curlies so as not to need SQL string escaping (and be prettier).
+
+** Seeding an ORG doc file
+
+You can create a listing of all existing public tables as a starter
+ORG file: see =schema2org.sh=. Once created, you can just start
+documenting!
+
+This will be improved to populate with existing comment descriptions
+to enable “round-tripping”.
