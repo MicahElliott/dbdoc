@@ -116,3 +116,29 @@ documenting!
 
 This will be improved to populate with existing comment descriptions
 to enable “round-tripping”.
+
+** Table Documentation Best Practices
+
+- Don’t need to be comprehensive. Docs get stale, and sometimes are ob
+- Add tags: legacy-dont-touch
+- Used-by
+- Gotchas
+- Characteristics: huge, static, possible values, performance, hotness
+- Deprecation
+
+
+** Q & A
+
+*Why use org instead of the more popular/common markdown?*
+
+ORG had definition lists.
+
+*How far should I go with documenting my tables?*
+
+Not too far.*
+
+*Why not just write the doc strings in SQL?*
+
+Then your editor would think you’re in SQL mode and wouldn’t do things
+like spell-checking or nice formatting. Plus, using ORG gives you a
+publishable HTML version of your docs.
