@@ -1,0 +1,30 @@
+#+Title: ACME Corp Customer Database
+
+* customer
+
+The monster that holds the precious user profiles. Used by the traffic
+light table to track which users …
+
+- email ::
+  The primary contact, taken from Salesforce’s
+  =Project.Primary_Contact=. This is redundant with our =lead.contacs=
+  data.
+
+- email-data-json ::
+  ...
+
+* ops-user
+
+DEPRECATED: replaced by =agent=
+
+* order
+
+Every purchase made by =customer=s through the old portal. Note that
+new purchases by customer through all other systems is recorded in the
+=order2= table!
+
+- foo ::
+  arst
+
+- bar ::
+  qwfp
