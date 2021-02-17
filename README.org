@@ -1,9 +1,9 @@
-#+Title: DB Docs
+#+Title: DB Doc
 
 Document your database tables and fields, because you should, and this
 makes it easy.
 
-DBDocs enables you to describe your database in a simple ORG file,
+DBDoc enables you to describe your database in a simple ORG file,
 which is easy and nice to edit and search in your repo, view in your
 SQL client, and publish as docs. This enables other stakeholders
 (Product people) to view your DB documentation.
@@ -63,27 +63,27 @@ tiny tool exists.
 ** Installation
 
 - Install [[https://github.com/babashka/babashka#installation][Babashka]].
-- Clone this repo and put =dbdocs= on your =PATH=.
+- Clone this repo and put =dbdoc= on your =PATH=.
 
 ** Process
 
 One time only, create a single living .org file in your repo, eg,
-=docs/dbdocs.org= for growing docs for your tables.
+=docs/dbdoc.org= for growing docs for your tables.
 
 Set up env vars to control file locations:
 
 #+begin_src shell
-export DBDOCS_ORG=docs
-export DBDOCS_SQL=resouces/migrations
-export DBDOCS_HTML=docs
+export DBDOC_ORG=docs
+export DBDOC_SQL=resouces/migrations
+export DBDOC_HTML=docs
 #+end_src
 
 Then, continually:
 
 - Describe as many tables and columns as you see fit.
 
-- Run =dbdocs docs/dbdocs.org= to generate a time-stamped file like
-  =resources/migrations/20201027000000-dbdocs.up.sql=
+- Run =dbdoc docs/dbdoc.org= to generate a time-stamped file like
+  =resources/migrations/20201027000000-dbdoc.up.sql=
 
 - Commit both files.
 
@@ -125,7 +125,7 @@ If you already have comments on your tables, you can pull them into
 your ORG doc to still get the benefits of shared editing/viewing. So
 if some of your team happens to add comments inside a client,
 round-tripping enables never losing data, and keeping your
-=dbcocs.org= as the SPOT. (This is coming soon.)
+=dbcoc.org= as the SPOT. (This is coming soon.)
 
 ** Seeding an ORG doc file
 
