@@ -57,7 +57,9 @@
   "Convert a section of table descriptions and combine with columns."
   [sec]
   (let [[tab tdesc & cols] (str/split sec #"\n\n")
-        tab                (str/replace tab #"(?s)\n" " ")
+        tab                (-> tab
+                               (str/replace #"(?s)\n" " ")
+                               (str/replace #"-" "_"))
         tdesc              (str/replace tdesc #"(?s)\n" " ")
         cmt                (format "COMMENT ON TABLE %s IS '%s';" tab tdesc)]
     (cons cmt (mapv #(process-col tab %) cols))))
