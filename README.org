@@ -4,9 +4,9 @@ Document your database tables and fields, because you should, and this
 makes it easy.
 
 DBDoc enables you to describe your database in a simple ORG file,
-which is easy and nice to edit and search in your repo, view in your
-SQL client, and publish as docs. This enables other stakeholders
-(Product people) to view your DB documentation.
+which is easy and nice for developers to edit and search in the repo,
+view in an SQL client, and publish as docs. This also enables other
+stakeholders (Product people) to view DB documentation.
 
 It works by converting a very minimal ORG-valid and -prescribed syntax
 into SQL =COMMENT ON= statements, which can be run on your database
@@ -89,6 +89,15 @@ Then, continually:
 
 - Run your migration, or just load the new SQL file.
 
+** Table Documentation Best Practices
+
+- Don’t need to be comprehensive
+- Add tags: legacy-dont-touch
+- Used-by
+- Gotchas/quirks
+- Characteristics: huge, static, possible values, performance, hotness
+- Deprecation
+
 ** Showing Comments in Clients
 
 - psql: =\d+=
@@ -119,7 +128,7 @@ precisely – this is a tiny subset of actual org.
 It you use “straight” apostrophes (+'+), they’ll be converted to
 curlies so as not to need SQL string escaping (and be prettier).
 
-** Round-Tripping (coming soon)
+** Round-Tripping (coming soon maybe)
 
 If you already have comments on your tables, you can pull them into
 your ORG doc to still get the benefits of shared editing/viewing. So
@@ -135,16 +144,6 @@ documenting!
 
 This will be improved to populate with existing comment descriptions
 to enable “round-tripping”.
-
-** Table Documentation Best Practices
-
-- Don’t need to be comprehensive. Docs get stale, and sometimes are ob
-- Add tags: legacy-dont-touch
-- Used-by
-- Gotchas
-- Characteristics: huge, static, possible values, performance, hotness
-- Deprecation
-
 
 ** Q & A
 
