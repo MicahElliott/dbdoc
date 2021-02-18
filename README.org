@@ -92,11 +92,11 @@ Then, continually:
 ** Table Documentation Best Practices
 
 - Don’t need to be comprehensive
-- Add tags: legacy-dont-touch
-- Used-by
+- Add an example datum for a column
+- Add tags: deprecated/defunct, xl, hot, new
+- Used-by: other tables (probably not FKs) and code areas
 - Gotchas/quirks
 - Characteristics: huge, static, possible values, performance, hotness
-- Deprecation
 
 ** Showing Comments in Clients
 
@@ -139,10 +139,10 @@ round-tripping enables never losing data, and keeping your
 ** Seeding an ORG doc file
 
 You can create a listing of all existing public tables as a starter
-ORG file: see =schema2org.sh=. Once created, you can just start
+ORG file: see =schema2org.zsh=. Once created, you can just start
 documenting!
 
-This will be improved to populate with existing comment descriptions
+This may be improved to populate with existing comment descriptions
 to enable “round-tripping”.
 
 ** Q & A
