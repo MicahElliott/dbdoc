@@ -63,7 +63,7 @@
                     str/trim
                     (str/replace  #"(?s)\s+" " ")
                     (str/replace  #"(?s)'" "’"))
-        cmt     (format "COMMENT ON COLUMN %s IS '%s';" colname text)]
+        cmt     (format "COMMENT ON COLUMN %s IS '%s';\n--;;" colname text)]
     cmt))
 
 (defn process-section
@@ -79,7 +79,7 @@
                      (str/replace #"(?s)\n" " ")
                      (str/replace #"(?s)'" "’")
                      str/trim)
-        cmt      (format "COMMENT ON TABLE %s IS '%s';" tabname tabdesc)]
+        cmt      (format "COMMENT ON TABLE %s IS '%s';\n--;;" tabname tabdesc)]
     (cons cmt (mapv #(process-col tabname %) cols))))
 
 (defn move-old-migration
