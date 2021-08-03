@@ -3,28 +3,35 @@
 Document your database tables and fields, because you should, and this
 makes it easy.
 
-DBDoc enables you to describe your database in a simple ORG file,
-which is easy and nice for developers to edit and search in the repo,
-view in an SQL client, and publish as docs. This also enables other
+DBDoc enables you to describe your database tables and their columns
+in a simple ORG file, which is easy and nice for developers to edit
+and search in the repo. The docs are then viewable in an SQL client
+(the main use case), and can be published as docs, which enables other
 stakeholders (Product people) to view DB documentation.
 
 It works by converting a very minimal ORG-valid and -prescribed syntax
-into SQL =COMMENT ON= statements, which can be run on your database
-(via migration or sourced or however you like).
+into SQL =COMMENT ON= statements, which can be run automatically on
+your database (via migration or sourced or however you like).
 
 #+html: <p align="center"><img src="postico.png" /></p>
 
-** Example
+** Example dbdoc.org file
 
-The following translation is done, from:
+The following shows an example dbdoc.org file describing a few tables:
+=customer= (containing a couple email columns), =order= (with no
+columns documented), and =ops-user= (a deprecated table). Notice: the
+hyphens instead of underscores, newlines before definitions, other
+indentation.
+
+The translation then is from:
 
 #+begin_src org
 #+Title: ACME Corp Customer Database
 
 * customer
 
-The monster that holds the precious user profiles. Used by the traffic
-light table to track which users …
+The monster table that holds the precious user profiles. Used by the
+traffic light table to track which users …
 
 - email ::
   The primary contact, taken from Salesforce’s
@@ -45,7 +52,7 @@ new purchases by customer through all other systems is recorded in the
 DEPRECATED: replaced by =agent=
 #+end_src
 
-to:
+to an SQL migration file containing:
 
 #+begin_src sql
 COMMENT ON TABLE customer IS 'The monster …';
@@ -57,8 +64,9 @@ COMMENT ON TABLE order IS 'Every purchase …';
 
 #+end_src
 
-That SQL is pretty ugly compared to the ORG version – that’s why this
-tiny tool exists.
+Commpared to the ORG version, that SQL is pretty ugly compared to the
+ORG version – quoting, line-length, indentation become nearly
+impossible. That’s why this tiny tool exists.
 
 ** Installation
 
@@ -70,7 +78,11 @@ tiny tool exists.
 One time only, create a single living .org file in your repo, eg,
 =docs/dbdoc.org= for growing docs for your tables.
 
-Set up env vars to control file locations:
+Assuming you haven't already somehow written =COMMENT=s for your DB,
+turn a SME analyst type or long-time developer in your company loose
+to write up a bunch of notes in the org file.
+
+Set up env vars to control file locations (optional):
 
 #+begin_src shell
 export DBDOC_ORG=docs
@@ -80,21 +92,24 @@ export DBDOC_HTML=docs
 
 Then, continually:
 
-- Describe as many tables and columns as you see fit.
+- Keep describing as many tables and columns as you see fit.
 
 - Run =dbdoc docs/dbdoc.org= to generate a time-stamped file like
   =resources/migrations/20201027000000-dbdoc.up.sql=
 
-- Commit both files.
+- Commit both the org and migration files.
 
-- Run your migration, or just load the new SQL file.
+- Publish the new versions to some site your company views (optional).
+
+- Run your migration (or just load the new SQL file if you don't do
+  migrations).
 
 ** Table Documentation Best Practices
 
 - Don’t need to be comprehensive
 - Add an example datum for a column
 - Add tags: deprecated/defunct, xl, hot, new
-- Used-by: other tables (probably not FKs) and code areas
+- Used-by references: other tables (probably not FKs) and code areas
 - Gotchas/quirks
 - Characteristics: huge, static, possible values, performance, hotness
 
@@ -102,54 +117,57 @@ Then, continually:
 
 - psql: =\d+=
 - mysql: =show full comments from <table_name>=
+- [[https://dataedo.com/kb/tools/dbeaver/how-to-view-and-edit-table-and-column-comments][dbeaver]] (HIGHLY RECOMMENDED!! the docs pop up everywhere)
 - [[https://eggerapps.at/postico/][postico]] (see the _Structure_ tab, as shown is screenshot)
-- [[https://dataedo.com/kb/tools/dbeaver/how-to-view-and-edit-table-and-column-comments][dbeaver]]
 - [[https://postgrest.org/en/v7.0.0/api.html#openapi-support][postgrest/swagger]]
 - [[https://dataedo.com/kb/tools/pgadmin/how-to-view-and-edit-table-and-column-comments][pgadmin]]
 - [[https://dataedo.com/kb/tools/datagrip/how-to-view-and-edit-table-and-column-comments][datagrip]]
 
-** Transformations
+** Read on if you want more details...
 
-Org uses underscores for italic, and it’s tedious enough to have wrap
-every DB entity in equals (+=+) in org to escape them, so they should
-instead be documented with hyphens (+-+) (though this isn’t required).
-IOW, all ORG hyphenated variables (eg, =my-var-name=) become
-underscores in SQL (=my_var_name=). So prefer to use =my-var-name= in
-the ORG description.
+*** Transformations
 
 The parser is really limited and rigid and wants to see a _table_
 description for every table you wish to document. So, if you want to
 document some column in a table, you must also provide at least a
-tidbit sentence for the table too.
+tidbit sentence for the table too. It's not a good parser so just be
+careful. Alignment/indentation is important too, so follow the example
+format precisely – this is a tiny subset of actual org.
 
-Alignment/indentation is important too, so follow the example format
-precisely – this is a tiny subset of actual org.
+Org uses underscores for italic, and it’s tedious enough to have to
+wrap every DB entity in equals (+=+) in org to escape them, so they
+should instead be documented with hyphens (+-+) (though this isn’t
+required). IOW, all ORG hyphenated variables (eg, =my-var-name=)
+become underscores in SQL (=my_var_name=). So prefer to use
+=my-var-name= in the ORG description.
 
 It you use “straight” apostrophes (+'+), they’ll be converted to
 curlies so as not to need SQL string escaping (and be prettier).
 
-** Round-Tripping (coming soon maybe)
+*** Round-Tripping (coming soon maybe)
 
 If you already have comments on your tables, you can pull them into
 your ORG doc to still get the benefits of shared editing/viewing. So
-if some of your team happens to add comments inside a client,
-round-tripping enables never losing data, and keeping your
-=dbcoc.org= as the SPOT. (This is coming soon.)
+if some of your team happens to add comments inside a client on your
+production DB, round-tripping enables never losing data, and keeping
+your =dbcoc.org= as the SPOT. (This is maybe coming soon; probably
+not.)
 
-** Seeding an ORG doc file
+*** Seeding an ORG doc file for first-time use
 
 You can create a listing of all existing public tables as a starter
 ORG file: see =schema2org.zsh=. Once created, you can just start
-documenting!
+documenting! This is probably totally buggy; it's a tiny sed script
+working off a pg-dump.
 
 This may be improved to populate with existing comment descriptions
 to enable “round-tripping”.
 
-** Q & A
+*** Q & A
 
 *Why use org instead of the more popular/common markdown?*
 
-ORG had definition lists. For the limited syntax that is dbdosc,
+ORG had definition lists. For the limited syntax that is dbdoc,
 they’re effectively the same (just use +*+ for heading instead of
 +#+).
 
@@ -162,3 +180,9 @@ Not too far. See recommendations above.
 Then your editor would think you’re in SQL mode and wouldn’t do things
 like spell-checking or nice formatting. Plus, using ORG gives you a
 publishable HTML version of your docs.
+
+*Does this work for all databases?*
+
+No. It's been tested with PostgreSQL, but should work with MySQL too.
+I don't think SQLite supports =COMMENT=s. Don't see any reason it
+wouldn't work with other DBs though.
