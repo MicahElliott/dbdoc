@@ -4,13 +4,13 @@ Document your database tables and fields, because you should, and this
 makes it easy.
 
 DBDoc enables you to describe your database tables and their columns
-in a simple ORG file, which is easy and nice for developers to edit
+in a simple ORG text file, which is easy and nice for developers to edit
 and search in the repo. The docs are then viewable in an SQL client
 (the main use case), and can be published as docs, which enables other
 stakeholders (Product people) to view DB documentation.
 
 It works by converting a very minimal ORG-valid and -prescribed syntax
-into SQL =COMMENT ON= statements, which can be run automatically on
+into (long) SQL =COMMENT ON= statements, which can be run automatically on
 your database (via migration or sourced or however you like).
 
 #+html: <p align="center"><img src="postico.png" /></p>
@@ -68,6 +68,11 @@ Commpared to the ORG version, that SQL is pretty ugly compared to the
 ORG version – quoting, line-length, indentation become nearly
 impossible. That’s why this tiny tool exists.
 
+There is a testable =docs/dbdoc.org= example (and its generated SQL
+migration file =resources/migrations/20210804162056-dbdoc.up.sql=) in
+this repo that was written to minimally describe the [[https://github.com/devrimgunduz/pagila][pagila toy
+database]]. Just run =dbdoc.clj= in the root of this repo to try it out!
+
 ** Installation
 
 - Install [[https://github.com/babashka/babashka#installation][Babashka]].
@@ -92,17 +97,21 @@ export DBDOC_HTML=docs
 
 Then, continually:
 
-- Keep describing as many tables and columns as you see fit.
+- Keep describing as many tables and columns as you see fit in the
+  =dbdoc.org= file.
 
-- Run =dbdoc docs/dbdoc.org= to generate a time-stamped file like
-  =resources/migrations/20201027000000-dbdoc.up.sql=
+- Run =dbdoc.clj docs/dbdoc.org= to generate a time-stamped file like
+  =resources/migrations/20201027000000-dbdoc.up.sql=. IMPORTANT!!
+  Don't forget this step! (You don't need all the developers on the
+  teams do this, so long as /someone/ does the generation/migrating
+  once in a while.)
 
 - Commit both the org and migration files.
 
 - Publish the new versions to some site your company views (optional).
 
-- Run your migration (or just load the new SQL file if you don't do
-  migrations).
+- Run your migration if your migs aren't automatic (or just load the
+  new SQL file if you don't do migrations).
 
 ** Table Documentation Best Practices
 

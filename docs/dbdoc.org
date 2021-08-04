@@ -1,0 +1,59 @@
+#+Title: Pagila DB Documentation
+
+* film
+
+A film, aka movie, is released initially in theaters, and then
+available to movie /stores/, at which point they become available to
+the DB.
+
+- title ::
+  The full name of the film, including things like sub-title and part
+  in a series; does not include language
+
+- description ::
+  A brief synopsis (catchy prose) about the plot
+
+- original-language ::
+  Spoken language, defaults to English
+
+- rental-rate ::
+  The price in US dollars and cents the /store/ charges for a
+  short-duration rental
+
+- length ::
+  Duration in minutes of the film; does not include any previews
+
+- rating ::
+  MPAA rating: G, PG, PG-13, R, etc
+
+* actor
+
+An actor is very simple and non-comprehinsive table to record the main
+headlining /stars/ of the film. All fields are obvious. Note that
+there may be duplicate actors that use slightly different names on occasion.
+
+* customer
+
+A movie store patron. A customer visits the store to rent a movie. We
+register them as a customer when they rent their first film.
+
+- activebool ::
+  A true value indicated that they have successfully rented at least
+  one movie. Also set to =false= after 3 years of not renting any
+  movie.
+
+- create-date ::
+  The date that the customer creates an account; may be different from
+  first rental date
+
+* rental
+
+An instance of a film being rented from the /store/. Note that a
+delinquent customer will not be allowed to create a new rental. #hot
+
+- return-date ::
+  The date that a film is returned to the store in a valid state,
+  which means properly rewound and in good working condition
+
+- rental-date ::
+  The date at which a customer rents a movie
