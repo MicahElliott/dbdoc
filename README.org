@@ -7,13 +7,13 @@ DBDoc enables you to describe your relational database tables and
 their columns in a simple ORG text file, which is easy and nice for
 developers to edit and search in the repo. The docs are then viewable
 in an SQL client as tooltips and elsewhere (the main use case), and
-can be published as docs, which enables other stakeholders (Product
-people) to view DB documentation.
+can be published as docs, which enables other stakeholders (eg,
+Product people) to view DB documentation.
 
 It works by converting a very minimal ORG-valid and -prescribed syntax
-(definition lists) into (long) [[https://www.postgresql.org/docs/current/sql-comment.html][SQL =COMMENT ON= statements]], which can
-be run automatically on your database (via migration or sourced or
-however you like).
+(top-level bullets, single paragraphs, and definition lists) into
+(long) [[https://www.postgresql.org/docs/current/sql-comment.html][SQL =COMMENT ON= statements]], which can be run automatically on
+your database (via migration or sourced or however you like).
 
 #+html: <p align="center"><img src="film-hover.png" /></p>
 #+html: <p align="center"><img src="film-table.png" /></p>
@@ -30,7 +30,7 @@ indentation.
 An example translation then is from:
 
 #+begin_src org
-#+Title: ACME Corp Customer Database
+#+Title: Pagila Movie Store Rental Database
 
 * film
 
@@ -206,3 +206,8 @@ publishable HTML version of your docs.
 No. It's been tested with PostgreSQL, but should work with MySQL too.
 [[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-to-tables-and-columns][I don't think SQLite supports =COMMENT=s.]] Don't see any reason it
 wouldn't work with other DBs though.
+
+** TODO
+
+- Support =COMMENT ON DATABASE= as top-level paragraph (but ignore
+  myriad other types)
