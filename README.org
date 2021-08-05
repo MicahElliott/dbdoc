@@ -110,7 +110,8 @@ Then, continually:
 
 - Commit both the org and migration files.
 
-- Publish the new versions to some site your company views (optional).
+- Generate HTML (from command line [[https://pandoc.org/][with Pandoc]] or [[https://stackoverflow.com/a/22091045/326516][Emacs]]) and publish
+  the new versions to some site your company views (optional).
 
 - Run your migration if your migs aren't automatic (or just load the
   new SQL file if you don't do migrations).
@@ -191,6 +192,12 @@ ORG had definition lists. For the limited syntax that is dbdoc,
 they’re effectively the same (just use +*+ for heading instead of
 +#+).
 
+*Do I need Emacs to work with Org files?*
+
+No! Emacs is not required to for any part of dbdoc. Most common
+editors have some proper way to work with Org. Even if yours doesn't,
+just edit in plain text mode.
+
 *How far should I go with documenting my tables?*
 
 Not too far. See recommendations above.
@@ -203,9 +210,10 @@ publishable HTML version of your docs.
 
 *Does this work for all databases?*
 
-No. It's been tested with PostgreSQL, but should work with MySQL too.
-[[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-to-tables-and-columns][I don't think SQLite supports =COMMENT=s.]] Don't see any reason it
-wouldn't work with other DBs though.
+No, not quite. It's been tested with PostgreSQL, but should work with
+MySQL too. [[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-to-tables-and-columns][I don't think SQLite supports =COMMENT=s.]] Don't see any
+reason it wouldn't work with several other relational SQL DBs though,
+like SQL Server and Oracle which also support the syntax.
 
 ** TODO
 
