@@ -21,11 +21,11 @@ your database (via migration or sourced or however you like).
 
 ** Example dbdoc.org file
 
-The following shows an example dbdoc.org file describing a few tables:
-=customer= (containing a couple email columns), =order= (with no
-columns documented), and =ops-user= (a deprecated table). Notice: the
-hyphens instead of underscores, newlines before definitions, other
-indentation.
+The following shows an example dbdoc.org file describing a movie store
+rental database and a few of its tables: =film= (containing =title=
+and =description= columns), =movie= (a deprecated table with no
+columns documented), and =actor=. Notice: the hyphens instead of
+underscores, newlines before definitions, other indentation.
 
 An example translation then is from:
 
@@ -66,9 +66,9 @@ COMMENT ON TABLE movie IS 'DEPRECATED: replaced …';
 …
 #+end_src
 
-Commpared to the ORG version, that SQL is pretty ugly compared to the
-ORG version – quoting, line-length, indentation become nearly
-impossible. That’s why this tiny tool exists.
+Commpared to the ORG version, that SQL is pretty ugly – quoting,
+line-length, indentation become nearly impossible. That’s why this
+tiny tool exists.
 
 There is a testable =docs/dbdoc.org= example (and its generated SQL
 migration file =resources/migrations/20210804162056-dbdoc.up.sql=) in
@@ -85,11 +85,12 @@ database]]. Just run =dbdoc.clj= in the root of this repo to try it out!
 One time only, create a single living .org file in your repo, eg,
 =docs/dbdoc.org= for growing docs for your tables.
 
-Assuming you haven't already somehow written =COMMENT=s for your DB,
+Assuming you haven't already somehow written a =COMMENT= for your DB,
 turn a SME analyst type or long-time developer in your company loose
-to write up a bunch of notes in the org file.
+to write up a bunch of notes in the org file. Then edit a bit to
+ensure it's valid ORG that dbdoc can handle..
 
-Set up env vars to control file locations (optional):
+Set up env vars to control file locations (optional, not well tested):
 
 #+begin_src shell
 export DBDOC_ORG=docs
@@ -99,10 +100,10 @@ export DBDOC_HTML=docs
 
 Then, continually:
 
-- Keep describing as many tables and columns as you see fit in the
-  =dbdoc.org= file.
+- Keep describing as many tables and columns as you see fit in your
+  =docs/dbdoc.org= file.
 
-- Run =dbdoc.clj docs/dbdoc.org= to generate a time-stamped file like
+- Run =dbdoc.clj= to generate a time-stamped file like
   =resources/migrations/20201027000000-dbdoc.up.sql=. IMPORTANT!!
   Don't forget this step! (You don't need all the developers on the
   teams do this, so long as /someone/ does the generation/migrating
@@ -113,17 +114,19 @@ Then, continually:
 - Generate HTML (from command line [[https://pandoc.org/][with Pandoc]] or [[https://stackoverflow.com/a/22091045/326516][Emacs]]) and publish
   the new versions to some site your company views (optional).
 
-- Run your migration if your migs aren't automatic (or just load the
-  new SQL file if you don't do migrations).
+- If your migrations aren't automatic as part of your CI, run your
+  migration (or just load the new SQL file if you don't do
+  migrations).
 
 ** Table Documentation Best Practices
 
-- Don’t need to be comprehensive
+- Don’t need to be comprehensive and document every field when names
+  make them obvious
 - Add an example datum for a column
-- Add tags: deprecated/defunct, xl, hot, new
 - Used-by references: other tables (probably not FKs) and code areas
 - Gotchas/quirks
-- Characteristics: huge, static, possible values, performance, hotness
+- Add characteristic tags: deprecated/defunct, xl, hot, new, static,
+  performance, donttouch, dragons
 
 ** Showing Comments in Clients
 
@@ -140,11 +143,11 @@ Then, continually:
 *** Transformations
 
 The parser is really limited and rigid and wants to see a _table_
-description for every table you wish to document. So, if you want to
-document some column in a table, you must also provide at least a
-tidbit sentence for the table too. It's not a good parser so just be
-careful. Alignment/indentation is important too, so follow the example
-format precisely – this is a tiny subset of actual org.
+description paragraph for every table you wish to document. So, if you
+want to document some column in a table, you must also provide at
+least a tidbit sentence for the table too. It's not a good parser so
+just be careful. Alignment/indentation is important too, so follow the
+example format precisely – this is a tiny subset of actual org.
 
 Org uses underscores for italic, and it’s tedious enough to have to
 wrap every DB entity in equals (+=+) in org to escape them, so they
@@ -211,7 +214,7 @@ publishable HTML version of your docs.
 *Does this work for all databases?*
 
 No, not quite. It's been tested with PostgreSQL, but should work with
-MySQL too. [[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-to-tables-and-columns][I don't think SQLite supports =COMMENT=s.]] Don't see any
+MySQL too. [[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-to-tables-and-columns][I don't think SQLite supports =COMMENT=.]] Don't see any
 reason it wouldn't work with several other relational SQL DBs though,
 like SQL Server and Oracle which also support the syntax.
 
