@@ -7,7 +7,7 @@ COMMENT ON COLUMN film.title IS 'The full name of the film, including things lik
 --;;
 COMMENT ON COLUMN film.description IS 'A brief synopsis (catchy prose) about the plot';
 --;;
-COMMENT ON COLUMN film.original_language IS 'Spoken language, defaults to English';
+COMMENT ON COLUMN film.original_language_id IS 'Spoken language, defaults to English';
 --;;
 COMMENT ON COLUMN film.rental_rate IS 'The price in US dollars and cents the /store/ charges for a short-duration rental';
 --;;

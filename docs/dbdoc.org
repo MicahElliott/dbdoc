@@ -13,7 +13,7 @@ the DB.
 - description ::
   A brief synopsis (catchy prose) about the plot
 
-- original-language ::
+- original-language-id ::
   Spoken language, defaults to English
 
 - rental-rate ::
@@ -28,7 +28,7 @@ the DB.
 
 * actor
 
-An actor is very simple and non-comprehinsive table to record the main
+An actor is very simple and non-comprehensive table to record the main
 headlining /stars/ of the film. All fields are obvious. Note that
 there may be duplicate actors that use slightly different names on occasion.
 

@@ -3,16 +3,20 @@
 Document your database tables and fields, because you should, and this
 makes it easy.
 
-DBDoc enables you to describe your database tables and their columns
-in a simple ORG text file, which is easy and nice for developers to edit
-and search in the repo. The docs are then viewable in an SQL client
-(the main use case), and can be published as docs, which enables other
-stakeholders (Product people) to view DB documentation.
+DBDoc enables you to describe your relational database tables and
+their columns in a simple ORG text file, which is easy and nice for
+developers to edit and search in the repo. The docs are then viewable
+in an SQL client as tooltips and elsewhere (the main use case), and
+can be published as docs, which enables other stakeholders (Product
+people) to view DB documentation.
 
 It works by converting a very minimal ORG-valid and -prescribed syntax
-into (long) SQL =COMMENT ON= statements, which can be run automatically on
-your database (via migration or sourced or however you like).
+(definition lists) into (long) [[https://www.postgresql.org/docs/current/sql-comment.html][SQL =COMMENT ON= statements]], which can
+be run automatically on your database (via migration or sourced or
+however you like).
 
+#+html: <p align="center"><img src="film-hover.png" /></p>
+#+html: <p align="center"><img src="film-table.png" /></p>
 #+html: <p align="center"><img src="postico.png" /></p>
 
 ** Example dbdoc.org file
@@ -23,45 +27,43 @@ columns documented), and =ops-user= (a deprecated table). Notice: the
 hyphens instead of underscores, newlines before definitions, other
 indentation.
 
-The translation then is from:
+An example translation then is from:
 
 #+begin_src org
 #+Title: ACME Corp Customer Database
 
-* customer
+* film
 
-The monster table that holds the precious user profiles. Used by the
-traffic light table to track which users …
+A film, aka movie, is released initially in theaters, and then
+available to movie /stores/, at which point they become available to
+the DB.
 
-- email ::
-  The primary contact, taken from Salesforce’s
-  =Project.Primary_Contact=. This is redundant with our =lead.contacs=
-  data.
+- title ::
+  The full name of the film, including things like sub-title and part
+  in a series; does not include language
 
-- email-data-json ::
-  ...
+- description ::
+  A brief synopsis (catchy prose) about the plot
 
-* order
+* movie
 
-Every purchase made by =customer=s through the old portal. Note that
-new purchases by customer through all other systems is recorded in the
-=order2= table!
+DEPRECATED: replaced by =film=
 
-* ops-user
+* actor
 
-DEPRECATED: replaced by =agent=
+An actor is very simple and non-comprehensive table to record the main
+headlining /stars/ of the film. All fields are obvious. Note that
+there may be duplicate actors that use slightly different names on occasion.
 #+end_src
 
 to an SQL migration file containing:
 
 #+begin_src sql
-COMMENT ON TABLE customer IS 'The monster …';
-COMMENT ON COLUMN customer.email IS 'The primary contact, …';
+COMMENT ON TABLE film IS 'A film, aka movie …';
+COMMENT ON COLUMN film.title IS 'The full name …';
 …
-
-COMMENT ON TABLE order IS 'Every purchase …';
+COMMENT ON TABLE movie IS 'DEPRECATED: replaced …';
 …
-
 #+end_src
 
 Commpared to the ORG version, that SQL is pretty ugly compared to the
@@ -153,6 +155,15 @@ become underscores in SQL (=my_var_name=). So prefer to use
 It you use “straight” apostrophes (+'+), they’ll be converted to
 curlies so as not to need SQL string escaping (and be prettier).
 
+*** Git Diffs
+
+The dbdoc script looks for an old migration file called
+=<timestamp>-dbdoc.up.sql= and renames it (via =git-move=) to a
+present timestamp. This enables Git to see the the new migration as
+simply a change from the last run, and so you can easily see the
+before/after diff. This also saves on a clutter of generating a bunch
+of extra migrations.
+
 *** Round-Tripping (coming soon maybe)
 
 If you already have comments on your tables, you can pull them into
@@ -193,5 +204,5 @@ publishable HTML version of your docs.
 *Does this work for all databases?*
 
 No. It's been tested with PostgreSQL, but should work with MySQL too.
-I don't think SQLite supports =COMMENT=s. Don't see any reason it
+[[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-to-tables-and-columns][I don't think SQLite supports =COMMENT=s.]] Don't see any reason it
 wouldn't work with other DBs though.
