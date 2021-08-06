@@ -16,7 +16,7 @@ It works by converting a very minimal ORG-valid and -prescribed syntax
 your database (via migration or sourced or however you like).
 
 #+html: <p align="center"><img src="film-hover.png" /></p>
-#+html: <p align="center"><img src="film-table.png" /></p>
+#+html: <p align="center"><img src="film-table2.png" /></p>
 #+html: <p align="center"><img src="postico.png" /></p>
 
 ** Example dbdoc.org file
@@ -66,7 +66,7 @@ COMMENT ON TABLE movie IS 'DEPRECATED: replaced …';
 …
 #+end_src
 
-Commpared to the ORG version, that SQL is pretty ugly – quoting,
+Compared to the ORG version, that SQL is pretty ugly – quoting,
 line-length, indentation become nearly impossible. That’s why this
 tiny tool exists.
 
