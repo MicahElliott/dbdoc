@@ -112,7 +112,8 @@ Then, continually:
 - Commit both the org and migration files.
 
 - Generate HTML (from command line [[https://pandoc.org/][with Pandoc]] or [[https://stackoverflow.com/a/22091045/326516][Emacs]]) and publish
-  the new versions to some site your company views (optional).
+  the new versions to some site your company views (optional, see
+  =org2connflu.zsh= script).
 
 - If your migrations aren't automatic as part of your CI, run your
   migration (or just load the new SQL file if you don't do
