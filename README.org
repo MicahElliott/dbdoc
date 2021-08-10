@@ -33,6 +33,18 @@ An example translation then is from:
 #+begin_src org
 #+Title: Pagila Movie Store Rental Database
 
+This is the "dbdoc" description file for the Pagila database. See the
+[[https://github.com/micahelliott/dbdoc][dbdoc README]]
+for more detailed instructions on its purpose and expanding it. This file
+contains short documentation for any tables and columns that could use
+even the slightest bit of explanation.
+
+Edit this file whenever you make schema changes. And be a good citizen
+by helping to grow this file any time you're touching a table!
+The remainder of this file will be used processed into comment
+descriptions that will be visible in your SQL client, and can also be
+exported as HTML.
+
 * FILM
 
 A film, aka movie, is released initially in theaters, and then
