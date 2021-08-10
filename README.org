@@ -4,11 +4,12 @@ Document your database tables and fields, because you should, and this
 makes it easy.
 
 DBDoc enables you to describe your relational database tables and
-their columns in a simple ORG text file, which is easy and nice for
+their columns in a simple text file, which is easy and nice for
 developers to edit and search in the repo. The docs are then viewable
-in an SQL client as tooltips and elsewhere (the main use case), and
-can be published as docs, which enables other stakeholders (eg,
-Product people) to view DB documentation.
+in an SQL client (the main use case) as tooltips and elsewhere, are
+greppable, and can be published as docs, which enables other
+stakeholders (eg, Product people) to view DB documentation (in
+Confluence or wherever).
 
 It works by converting a very minimal ORG-valid and -prescribed syntax
 (top-level bullets, single paragraphs, and definition lists) into
@@ -32,7 +33,7 @@ An example translation then is from:
 #+begin_src org
 #+Title: Pagila Movie Store Rental Database
 
-* film
+* FILM
 
 A film, aka movie, is released initially in theaters, and then
 available to movie /stores/, at which point they become available to
@@ -45,11 +46,11 @@ the DB.
 - description ::
   A brief synopsis (catchy prose) about the plot
 
-* movie
+* MOVIE
 
 DEPRECATED: replaced by =film=
 
-* actor
+* ACTOR
 
 An actor is very simple and non-comprehensive table to record the main
 headlining /stars/ of the film. All fields are obvious. Note that
@@ -66,9 +67,9 @@ COMMENT ON TABLE movie IS 'DEPRECATED: replaced …';
 …
 #+end_src
 
-Compared to the ORG version, that SQL is pretty ugly – quoting,
-line-length, indentation become nearly impossible. That’s why this
-tiny tool exists.
+Compared to the ORG version, that SQL is pretty ugly – editing
+(quoting, line-length/newlines, indentation, formatting) becomes quite
+difficult. That’s why this tiny tool exists.
 
 There is a testable =docs/dbdoc.org= example (and its generated SQL
 migration file =resources/migrations/20210804162056-dbdoc.up.sql=) in
@@ -78,41 +79,51 @@ database]]. Just run =dbdoc.clj= in the root of this repo to try it out!
 ** Installation
 
 - Install [[https://github.com/babashka/babashka#installation][Babashka]].
-- Clone this repo and put =dbdoc= on your =PATH=.
+- Clone this repo and put its root on your =PATH=.
 
-** Process
+Now you're ready to run =dbdoc.clj= from anywhere, and that's all
+there is to it! Not even any CLI options. :)
 
-One time only, create a single living .org file in your repo, eg,
-=docs/dbdoc.org= for growing docs for your tables.
+** Documentation Process
 
-Assuming you haven't already somehow written a =COMMENT= for your DB,
-turn a SME analyst type or long-time developer in your company loose
-to write up a bunch of notes in the org file. Then edit a bit to
-ensure it's valid ORG that dbdoc can handle..
+*** One time only
 
-Set up env vars to control file locations (optional, not well tested):
+- Create a single living .org file in your repo, eg, =docs/dbdoc.org=
+  for growing docs for your tables.
 
-#+begin_src shell
-export DBDOC_ORG=docs
-export DBDOC_SQL=resouces/migrations
-export DBDOC_HTML=docs
-#+end_src
+- Assuming you haven't already somehow written a =COMMENT= for your
+  DB, turn a SME analyst type or long-time developer in your company
+  loose to write up a bunch of notes in the org file. Then edit a bit
+  to ensure it's valid ORG that dbdoc can handle..
 
-Then, continually:
+- Set up env vars to control file locations (optional, not well
+  tested):
 
-- Keep describing as many tables and columns as you see fit in your
-  =docs/dbdoc.org= file.
+  #+begin_src shell
+  export DBDOC_ORG=docs
+  export DBDOC_SQL=resouces/migrations
+  export DBDOC_HTML=docs
+  #+end_src
 
-- Run =dbdoc.clj= to generate a time-stamped file like
-  =resources/migrations/20201027000000-dbdoc.up.sql=. IMPORTANT!!
-  Don't forget this step! (You don't need all the developers on the
-  teams do this, so long as /someone/ does the generation/migrating
-  once in a while.)
+*** Continually (this is the only real process)
 
-- Commit both the org and migration files.
+1. Keep describing as many tables and columns as you see fit in your
+   =docs/dbdoc.org= file. Every time a developer changes or adds a
+   field or table, they also put a sentence or two describing its
+   purpose in the org file.
+
+2.  Run =dbdoc.clj= to generate a time-stamped file like
+   =resources/migrations/20201027000000-dbdoc.up.sql=. IMPORTANT!!
+   Don't forget this step! (You don't need all the developers on the
+   teams do this, so long as /someone/ does the generation/migrating
+   once in a while.)
+
+3. Commit both the org and migration files.
+
+*** Optional
 
 - Generate HTML (from command line [[https://pandoc.org/][with Pandoc]] or [[https://stackoverflow.com/a/22091045/326516][Emacs]]) and publish
-  the new versions to some site your company views (optional, see
+  the new version to some site your company views (optional, see
   =org2connflu.zsh= script).
 
 - If your migrations aren't automatic as part of your CI, run your
@@ -157,7 +168,7 @@ required). IOW, all ORG hyphenated variables (eg, =my-var-name=)
 become underscores in SQL (=my_var_name=). So prefer to use
 =my-var-name= in the ORG description.
 
-It you use “straight” apostrophes (+'+), they’ll be converted to
+It you use “straight” apostrophes ('), they’ll be converted to
 curlies so as not to need SQL string escaping (and be prettier).
 
 *** Git Diffs
@@ -230,9 +241,19 @@ with: =pandoc -s docs/dbdoc.org -o temp.md= and then paste it into
 Confluence from its "plus" menu while editing a page:
 /Markup > Markdown > Paste > Insert/
 
-* Similar Tools Comparison
+*Why can't I use just my SQL client to add descriptive comment?*
 
-** dbdocs (same name but plural!)
+Because it seems you shouldn't. Which DB are you wanting to modify?
+Are you connecting your client to a production DB and making edits to
+prod data? This doesn't make sense to me and I don't understand why
+clients support =COMMENT= editing. Developers, QA, and others
+probably all need different non-prod DBs to have up-to-date
+documentation at their fingertips, and dbdoc enables putting that
+documentation into every instance.
+
+** Similar Tools Comparison
+
+*** dbdocs (same name but plural!)
 
 [[https://dbdocs.io/][dbdocs]] is decsribed as: "A free & simple tool to create web-based
 database documentation using DSL code. Designed for developers.
@@ -243,7 +264,7 @@ webpage that can be synced with Confluence or published wherever you
 choose. dbdocs creates ERDs, but DBDoc.org lets clients like DBeaver
 handle that for you.
 
-** Commercial Tools
+*** Commercial Tools
 
 There are many DB documentation tools in this realm. If you're
 interested in much more sophisticated all-in-one type tools that may
