@@ -219,6 +219,26 @@ MySQL too. [[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-
 reason it wouldn't work with several other relational SQL DBs though,
 like SQL Server and Oracle which also support the syntax.
 
+* Similar Tools Comparison
+
+** dbdocs (same name but plural!)
+
+[[https://dbdocs.io/][dbdocs]] is decsribed as: "A free & simple tool to create web-based
+database documentation using DSL code. Designed for developers.
+Integrate seamlessly with your development workflow." As a full DDL
+DSL, it is a much heavier commitment to incorporate. It also creates a
+rich website for your tables, whereas DBDoc.org just creates a single
+webpage that can be synced with Confluence or published wherever you
+choose. dbdocs creates ERDs, but DBDoc.org lets clients like DBeaver
+handle that for you.
+
+** Commercial Tools
+
+There are many DB documentation tools in this realm. If you're
+interested in much more sophisticated all-in-one type tools that may
+work with other types of DBMSs, look into [[https://www.apexsql.com/sql-tools-doc.aspx][ApexSQL]], [[https://www.red-gate.com/products/sql-development/sql-doc/][Redgate]], and
+[[https://dataedo.com/][Dataedo]].
+
 ** TODO
 
 - Support =COMMENT ON DATABASE= as top-level paragraph (but ignore
