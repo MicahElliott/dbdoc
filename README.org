@@ -152,7 +152,7 @@ example format precisely – this is a tiny subset of actual org.
 
 Org uses underscores for italic, and it’s tedious enough to have to
 wrap every DB entity in equals (+=+) in org to escape them, so they
-should instead be documented with hyphens (+-+) (though this isn’t
+should instead be documented with hyphens (=-=) (though this isn’t
 required). IOW, all ORG hyphenated variables (eg, =my-var-name=)
 become underscores in SQL (=my_var_name=). So prefer to use
 =my-var-name= in the ORG description.
@@ -188,13 +188,13 @@ working off a pg-dump.
 This may be improved to populate with existing comment descriptions
 to enable “round-tripping”.
 
-*** Q & A
+*** FAQs
 
 *Why use org instead of the more popular/common markdown?*
 
-ORG had definition lists. For the limited syntax that is dbdoc,
-they’re effectively the same (just use +*+ for heading instead of
-+#+).
+ORG has definition lists which work great for column docs. For the
+limited syntax that is dbdoc, org and md are effectively the same
+(just use =*= for heading instead of =#=).
 
 *Do I need Emacs to work with Org files?*
 
@@ -204,7 +204,10 @@ just edit in plain text mode.
 
 *How far should I go with documenting my tables?*
 
-Not too far. See recommendations above.
+Not super far. See recommendations above. I like to limit column docs
+to not more than a few sentences. A table doc can be a legthy
+paragraph (only one!). Your source code docstrings are probably a
+better place to get into the nitty gritty.
 
 *Why not just write the doc strings in SQL?*
 
@@ -218,6 +221,14 @@ No, not quite. It's been tested with PostgreSQL, but should work with
 MySQL too. [[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-to-tables-and-columns][I don't think SQLite supports =COMMENT=.]] Don't see any
 reason it wouldn't work with several other relational SQL DBs though,
 like SQL Server and Oracle which also support the syntax.
+
+*How do I get this into Confluence without API access?*
+
+Your Confluence setup might only support creating a page from markdown
+(not org or html). So you can use pandoc to convert from org to md
+with: =pandoc -s docs/dbdoc.org -o temp.md= and then paste it into
+Confluence from its "plus" menu while editing a page:
+/Markup > Markdown > Paste > Insert/
 
 * Similar Tools Comparison
 
@@ -239,7 +250,7 @@ interested in much more sophisticated all-in-one type tools that may
 work with other types of DBMSs, look into [[https://www.apexsql.com/sql-tools-doc.aspx][ApexSQL]], [[https://www.red-gate.com/products/sql-development/sql-doc/][Redgate]], and
 [[https://dataedo.com/][Dataedo]].
 
-** TODO
+** Future Enhancements
 
 - Support =COMMENT ON DATABASE= as top-level paragraph (but ignore
   myriad other types)
