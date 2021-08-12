@@ -240,10 +240,19 @@ publishable HTML version of your docs.
 
 *Does this work for all databases?*
 
-No, not quite. It's been tested with PostgreSQL, but should work with
-MySQL too. [[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-to-tables-and-columns][I don't think SQLite supports =COMMENT=.]] Don't see any
-reason it wouldn't work with several other relational SQL DBs though,
-like SQL Server and Oracle which also support the syntax.
+It does work for many! It's been tested with PostgreSQL, and should
+work with others too, such as:
+
+- [[https://www.cockroachlabs.com/docs/stable/comment-on.html][CockroachDB]]
+- [[https://docs.oracle.com/cd/B19306_01/server.102/b14200/statements_4009.htm][Oracle]]
+- [[https://www.ibm.com/support/producthub/db2/docs/content/SSEPGG_11.5.0/com.ibm.db2.luw.sql.ref.doc/doc/r0000901.html][IBM DB2]]
+- [[https://docs.snowflake.com/en/sql-reference/sql/comment.html][Snowflake]]
+
+[[https://issues.apache.org/jira/browse/DERBY-7008][Apache Derby may get support]].
+
+[[https://stackoverflow.com/questions/7426205/sqlite-adding-comments-to-tables-and-columns][I don't think SQLite supports =COMMENT=.]] And [[https://stackoverflow.com/questions/2162420/alter-mysql-table-to-add-comments-on-columns][MySQL makes it very
+difficult]] (and [[https://stackoverflow.com/questions/58665398/modifing-comment-into-spark-table-on-databricks][Spark]]) to the point that DBDoc won't attempt to make it
+work. [[https://feedback.azure.com/forums/307516-sql-data-warehouse/suggestions/16317988-table-extended-properties][SQL Server/Azure is a fail too]]. And [[https://community.cloudera.com/t5/Support-Questions/Is-there-way-to-add-comment-to-a-phoenix-table/td-p/165405][Ignite]].
 
 *How do I get this into Confluence without API access?*
 
