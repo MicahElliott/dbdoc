@@ -1,14 +1,14 @@
-#+Title: DB Doc
+#+Title: DBDoc (Database Schema Documenter)
 
-Document your database tables and fields, because you should, and this
-makes it easy.
+Document your database schema (tables and columns), because you
+should, and this makes it easy.
 
-DBDoc enables you to describe your relational database tables and
-their columns in a simple text file, which is easy and nice for
-developers to edit and search in the repo. The docs are then viewable
-in an SQL client (the main use case) as tooltips and elsewhere, are
-greppable, and can be published as docs, which enables other
-stakeholders (eg, Product people) to view DB documentation (in
+DBDoc enables you to describe (=COMMENT ON=) your relational database
+schema in a simple text file, which is easy and nice for
+developers/DBAs to edit and search in the repo. The docs are then
+viewable in an SQL client (the main use case) as tooltips and in other
+views, are greppable, and can be published as docs, which enables
+other stakeholders (eg, Product people) to view DB documentation (in
 Confluence or wherever).
 
 It works by converting a very minimal ORG-valid and -prescribed syntax
@@ -22,7 +22,7 @@ your database (via migration or sourced or however you like).
 
 ** Example dbdoc.org file
 
-The following shows an example dbdoc.org file describing a movie store
+The following shows an example =dbdoc.org= file describing a movie store
 rental database and a few of its tables: =film= (containing =title=
 and =description= columns), =movie= (a deprecated table with no
 columns documented), and =actor=. Notice: the hyphens instead of
@@ -104,9 +104,9 @@ there is to it! Not even any CLI options. :)
   for growing docs for your tables.
 
 - Assuming you haven't already somehow written a =COMMENT= for your
-  DB, turn a SME analyst type or long-time developer in your company
-  loose to write up a bunch of notes in the org file. Then edit a bit
-  to ensure it's valid ORG that dbdoc can handle..
+  DB, turn a SME analyst type or long-time developer or DBA in your
+  company loose to write up a bunch of notes in the org file. Then
+  edit a bit to ensure it's valid ORG that DBDoc can handle..
 
 - Set up env vars to change default file locations (optional, not well
   tested):
@@ -185,7 +185,7 @@ curlies so as not to need SQL string escaping (and be prettier).
 
 *** Git Diffs
 
-The dbdoc script looks for an old migration file called
+The =dbdoc.clj= script looks for an old migration file called
 =<timestamp>-dbdoc.up.sql= and renames it (via =git-move=) to a
 present timestamp. This enables Git to see the the new migration as
 simply a change from the last run, and so you can easily see the
@@ -216,12 +216,14 @@ to enable “round-tripping”.
 *Why use org instead of the more popular/common markdown?*
 
 ORG has definition lists which work great for column docs. For the
-limited syntax that is dbdoc, org and md are effectively the same
+limited syntax that is DBDoc, org and md are effectively the same
 (just use =*= for heading instead of =#=).
+
+But [[https://github.com/MicahElliott/dbdoc/issues/2][I will implement Markdown]] if anyone feels they need it.
 
 *Do I need Emacs to work with Org files?*
 
-No! Emacs is not required to for any part of dbdoc. Most common
+No! Emacs is not required to for any part of DBDoc. Most common
 editors have some proper way to work with Org. Even if yours doesn't,
 just edit in plain text mode.
 
@@ -247,6 +249,7 @@ work with others too, such as:
 - [[https://docs.oracle.com/cd/B19306_01/server.102/b14200/statements_4009.htm][Oracle]]
 - [[https://www.ibm.com/support/producthub/db2/docs/content/SSEPGG_11.5.0/com.ibm.db2.luw.sql.ref.doc/doc/r0000901.html][IBM DB2]]
 - [[https://docs.snowflake.com/en/sql-reference/sql/comment.html][Snowflake]]
+- [[https://www.vertica.com/docs/9.2.x/HTML/Content/Authoring/SQLReferenceManual/Statements/COMMENT/COMMENTONTABLE.htm?tocpath=SQL%20Reference%20Manual%7CSQL%20Statements%7CCOMMENT%C2%A0ON%C2%A0Statements%7C_____9][Vertica]]
 
 [[https://issues.apache.org/jira/browse/DERBY-7008][Apache Derby may get support]].
 
@@ -264,26 +267,33 @@ Confluence from its "plus" menu while editing a page:
 
 *Why can't I use just my SQL client to add descriptive comment?*
 
-Because it seems you shouldn't. Which DB are you wanting to modify?
-Are you connecting your client to a production DB and making edits to
-prod data? This doesn't make sense to me and I don't understand why
-clients support =COMMENT= editing. Developers, QA, and others
-probably all need different non-prod DBs to have up-to-date
-documentation at their fingertips, and dbdoc enables putting that
-documentation into every instance.
+Because it seems wrong. Which DB are you wanting to modify? Are you
+connecting your client to a production DB and making edits to prod
+data? This doesn't make sense to me and I don't understand why SQL
+clients support =COMMENT= editing. Developers, DBAs, QA, and others
+may not have prod access, and probably all need different non-prod DBs
+to have up-to-date documentation at their fingertips, and DBDoc
+enables putting that documentation into every instance.
 
 ** Similar Tools Comparison
 
 *** dbdocs (same name but plural!)
 
-[[https://dbdocs.io/][dbdocs]] is decsribed as: "A free & simple tool to create web-based
-database documentation using DSL code. Designed for developers.
-Integrate seamlessly with your development workflow." As a full DDL
-DSL, it is a much heavier commitment to incorporate. It also creates a
-rich website for your tables, whereas DBDoc.org just creates a single
-webpage that can be synced with Confluence or published wherever you
-choose. dbdocs creates ERDs, but DBDoc.org lets clients like DBeaver
-handle that for you.
+[[https://dbdocs.io/][dbdocs]] (plural) is decsribed as: "A free & simple tool to create
+web-based database documentation using DSL code. Designed for
+developers. Integrate seamlessly with your development workflow." As a
+full DDL DSL, it is a much heavier commitment to incorporate. It also
+creates a rich website for your tables, whereas /DBDoc/ just creates
+a single webpage that can be synced with Confluence or published
+wherever you choose. dbdocs creates ERDs, but /DBDoc/ lets clients
+like DBeaver handle that for you.
+
+*** Rails ActiveRecord
+
+The [[https://github.com/rails/rails/pull/22911][ActiveRecord ORM]] has the ability to support comments as part of a
+schema definition and migration syntax. You may not need DBDoc if
+you're using AR. But if you want to publish your schema documentation,
+you should still use DBDoc!
 
 *** Commercial Tools
 
