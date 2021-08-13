@@ -4,21 +4,26 @@ Document your database schema (tables and columns), because you
 should, and this makes it easy.
 
 DBDoc enables you to describe (=COMMENT ON=) your relational database
-schema in a simple text file, which is easy and nice for
-developers/DBAs to edit and search in the repo. The docs are then
-viewable in an SQL client (the main use case) as tooltips and in other
-views, are greppable, and can be published as docs, which enables
-other stakeholders (eg, Product people) to view DB documentation (in
-Confluence or wherever).
+schema in a simple text file, which is easy for developers/DBAs to
+edit and search in the repo. The docs (each a snippet of a sentence or
+two) are then viewable in an SQL client (the main use case) as
+tooltips and in other views, are greppable, and can be web-published
+as docs, which enables other stakeholders (eg, Product people) to view
+DB documentation (in Confluence or wherever).
 
 It works by converting a very minimal ORG-valid and -prescribed syntax
 (top-level bullets, single paragraphs, and definition lists) into
 (long) [[https://www.postgresql.org/docs/current/sql-comment.html][SQL =COMMENT ON= statements]], which can be run automatically on
 your database (via migration or sourced or however you like).
 
-#+html: <p align="center"><img src="film-hover.png" /></p>
-#+html: <p align="center"><img src="film-table2.png" /></p>
-#+html: <p align="center"><img src="postico.png" /></p>
+#+html: <p align="center"><img src="film-hover.png" title="DBeaver showing a hover on column/heading" /></p>
+#+caption: DBeaver showing a hover on column/heading
+
+#+html: <p align="center"><img src="film-table2.png" title="DBeaver properties view" /></p>
+#+caption: DBeaver properties view
+
+#+html: <p align="center"><img src="postico.png" title="Postico structure view with doc snippets in red" /></p>
+#+caption: Postico "structure" view with doc snippets in red
 
 ** Example dbdoc.org file
 
@@ -265,15 +270,16 @@ with: =pandoc -s docs/dbdoc.org -o temp.md= and then paste it into
 Confluence from its "plus" menu while editing a page:
 /Markup > Markdown > Paste > Insert/
 
-*Why can't I use just my SQL client to add descriptive comment?*
+*Why can't I use just my SQL client to add descriptive comments?*
 
-Because it seems wrong. Which DB are you wanting to modify? Are you
-connecting your client to a production DB and making edits to prod
-data? This doesn't make sense to me and I don't understand why SQL
-clients support =COMMENT= editing. Developers, DBAs, QA, and others
-may not have prod access, and probably all need different non-prod DBs
-to have up-to-date documentation at their fingertips, and DBDoc
-enables putting that documentation into every instance.
+Because it seems wrong. Which copy of your DB are you wanting to
+modify? Are you connecting your client to a production DB and making
+edits to prod data? This doesn't make sense to me and I don't
+understand why SQL clients support =COMMENT= editing. Developers, DBAs,
+QA, and others may not have prod access, and probably all need
+different non-prod DBs to have up-to-date documentation at their
+fingertips, and DBDoc enables putting that documentation into every
+instance.
 
 ** Similar Tools Comparison
 
@@ -283,10 +289,10 @@ enables putting that documentation into every instance.
 web-based database documentation using DSL code. Designed for
 developers. Integrate seamlessly with your development workflow." As a
 full DDL DSL, it is a much heavier commitment to incorporate. It also
-creates a rich website for your tables, whereas /DBDoc/ just creates
-a single webpage that can be synced with Confluence or published
-wherever you choose. dbdocs creates ERDs, but /DBDoc/ lets clients
-like DBeaver handle that for you.
+creates a rich website for your tables, whereas /DBDoc/ just creates a
+single webpage that can be synced with Confluence or published
+wherever you choose. dbdocs creates ERDs, but /DBDoc/ lets capable
+clients like DBeaver handle that for you.
 
 *** Rails ActiveRecord
 
@@ -297,13 +303,16 @@ you should still use DBDoc!
 
 *** Commercial Tools
 
-There are many DB documentation tools in this realm. If you're
-interested in much more sophisticated all-in-one type tools that may
-work with other types of DBMSs, look into [[https://www.apexsql.com/sql-tools-doc.aspx][ApexSQL]], [[https://www.red-gate.com/products/sql-development/sql-doc/][Redgate]], and
-[[https://dataedo.com/][Dataedo]].
+There are many DB documentation tools in this realm. For any use cases
+I've encountered, they are overkill. But if you're interested in much
+more sophisticated kitchen sink tools that may work with other types
+of DBMSs, look into [[https://www.apexsql.com/sql-tools-doc.aspx][ApexSQL]], [[https://www.red-gate.com/products/sql-development/sql-doc/][Redgate]], and [[https://dataedo.com/][Dataedo]].
 
 ** Future Enhancements
 
 - Support =COMMENT ON DATABASE= as top-level paragraph (but ignore
   myriad other types). *Actually, this can't be done flexibly since it
   requires knowing the DB name.*
+
+Please submit an issue if you think of any enhancements or find bugs.
+I'm eager to improve this, but need your ideas!
