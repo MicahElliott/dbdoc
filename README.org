@@ -1,7 +1,7 @@
 #+Title: DBDoc (Database Schema Documenter)
 
-Document your database schema (tables and columns), because you
-should, and this makes it easy.
+Document your database schema (tables and columns), because your team
+will thank you, and this makes it easy.
 
 DBDoc enables you to describe (=COMMENT ON=) your relational database
 schema in a simple text file, which is easy for developers/DBAs to
@@ -160,12 +160,11 @@ there is to it! Not even any CLI options. :)
 ** Showing Comments in Clients
 
 - psql: =\d+=
-- mysql: =show full comments from <table_name>=
 - [[https://dataedo.com/kb/tools/dbeaver/how-to-view-and-edit-table-and-column-comments][dbeaver]] (HIGHLY RECOMMENDED!! the docs pop up everywhere)
 - [[https://eggerapps.at/postico/][postico]] (see the _Structure_ tab, as shown is screenshot)
 - [[https://postgrest.org/en/v7.0.0/api.html#openapi-support][postgrest/swagger]]
 - [[https://dataedo.com/kb/tools/pgadmin/how-to-view-and-edit-table-and-column-comments][pgadmin]]
-- [[https://dataedo.com/kb/tools/datagrip/how-to-view-and-edit-table-and-column-comments][datagrip]]
+- [[https://dataedo.com/kb/tools/datagrip/how-to-view-and-edit-table-and-column-comments][datagrip]] ([[https://stackoverflow.com/questions/66129447/how-to-show-column-and-table-comment-in-jetbrains-datagrip][how to enable]])
 
 ** Read on if you want more details...
 
@@ -196,6 +195,12 @@ present timestamp. This enables Git to see the the new migration as
 simply a change from the last run, and so you can easily see the
 before/after diff. This also saves on a clutter of generating a bunch
 of extra migrations.
+
+*** Doc Coverage
+
+You can track progress of your documenting by noting how many tables
+have or have not been covered. Use the =coverage.zsh= script to offer
+a simple coverage report.
 
 *** Round-Tripping (coming soon maybe)
 
@@ -313,6 +318,8 @@ of DBMSs, look into [[https://www.apexsql.com/sql-tools-doc.aspx][ApexSQL]], [[h
 - Support =COMMENT ON DATABASE= as top-level paragraph (but ignore
   myriad other types). *Actually, this can't be done flexibly since it
   requires knowing the DB name.*
+
+- Identify fields/tables that are missing comments
 
 Please submit an issue if you think of any enhancements or find bugs.
 I'm eager to improve this, but need your ideas!
