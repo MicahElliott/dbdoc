@@ -19,14 +19,7 @@ your database (via migration or sourced or however you like).
 #+html: <p align="center"><img src="film-hover.png" title="DBeaver showing a hover on column/heading" /></p>
 #+caption: DBeaver showing a hover on column/heading
 
-#+html: <p align="center"><img src="film-table2.png" title="DBeaver properties view" /></p>
-#+caption: DBeaver properties view
-
-#+html: <p align="center"><img src="postico.png" title="Postico structure view with doc snippets in red" /></p>
-#+caption: Postico "structure" view with doc snippets in red
-
-#+html: <p align="center"><img src="org-preso.png" title="Emacs Org slide presentation view" /></p>
-#+caption: Emacs Org slide presentation view
+_(See far below for more screenshots.)_
 
 ** Example dbdoc.org file
 
@@ -326,3 +319,25 @@ of DBMSs, look into [[https://www.apexsql.com/sql-tools-doc.aspx][ApexSQL]], [[h
 
 Please submit an issue if you think of any enhancements or find bugs.
 I'm eager to improve this, but need your ideas!
+
+** More Screenshots
+
+Hover to see captions, just like in DB clients! There, you've been trained.
+
+#+html: <p align="center"><img src="film-table2.png" title="DBeaver properties view" /></p>
+#+caption: DBeaver properties view
+
+#+html: <p align="center"><img src="postico.png" title="Postico structure view with doc snippets in red" /></p>
+#+caption: Postico "structure" view with doc snippets in red
+
+#+html: <p align="center"><img src="datagrip1.png" title="Datagrip tree table hover" /></p>
+#+caption: Datagrip tree table hover
+
+#+html: <p align="center"><img src="datagrip2.png" title="Datagrip column comments" /></p>
+#+caption: Datagrip column hover
+
+#+html: <p align="center"><img src="datagrip3.png" title="Datagrip tree view comments" /></p>
+#+caption: Datagrip tree view comments
+
+#+html: <p align="center"><img src="org-preso.png" title="Emacs Org slide presentation view" /></p>
+#+caption: Emacs Org slide presentation view
