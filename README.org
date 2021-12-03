@@ -25,6 +25,9 @@ your database (via migration or sourced or however you like).
 #+html: <p align="center"><img src="postico.png" title="Postico structure view with doc snippets in red" /></p>
 #+caption: Postico "structure" view with doc snippets in red
 
+#+html: <p align="center"><img src="org-preso.png" title="Emacs Org slide presentation view" /></p>
+#+caption: Emacs Org slide presentation view
+
 ** Example dbdoc.org file
 
 The following shows an example =dbdoc.org= file describing a movie store

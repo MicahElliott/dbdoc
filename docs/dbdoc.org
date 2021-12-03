@@ -2,9 +2,11 @@
 
 * film
 
-A film, aka movie, is released initially in theaters, and then
+A *film*, aka movie, is released initially in theaters, and then
 available to movie /stores/, at which point they become available to
 the DB.
+
+
 
 - title ::
   The full name of the film, including things like sub-title and part
@@ -25,6 +27,7 @@ the DB.
 
 - rating ::
   MPAA rating: G, PG, PG-13, R, etc
+
 
 * actor
 
