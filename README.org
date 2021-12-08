@@ -3,13 +3,23 @@
 Document your database schema (tables and columns), because your team
 will thank you, and this makes it easy.
 
-DBDoc enables you to describe (=COMMENT ON=) your relational database
-schema in a simple text file, which is easy for developers/DBAs to
-edit and search in the repo. The docs (each a snippet of a sentence or
-two) are then viewable in an SQL client (the main use case) as
-tooltips and in other views, are greppable, and can be web-published
-as docs, which enables other stakeholders (eg, Product people) to view
-DB documentation (in Confluence or wherever).
+DBDoc enables you to describe (via generated =COMMENT ON= statements)
+your relational database schema in a simple text file, which is easy
+for developers/DBAs to edit and search in the repo. The docs (each a
+snippet of a sentence or two) are then:
+
+- *viewable in an SQL client* like DBeaver or Datagrip (the main use
+  case) as tooltips and in other views
+
+- *greppable* in your code base
+
+- *web-publishable as docs*, enabling other
+  stakeholders (eg, Product people) to view DB documentation (in
+  Confluence or wherever)
+
+- *presentable* one table at a time for brainstorming, explaining, etc,
+  with an org presenter, like [[https://github.com/eschulte/epresent][epresent]] or [[https://github.com/takaxp/org-tree-slide][org-tree-slide]] (screenshot
+  at bottom)
 
 It works by converting a very minimal ORG-valid and -prescribed syntax
 (top-level bullets, single paragraphs, and definition lists) into
@@ -137,7 +147,7 @@ there is to it! Not even any CLI options. :)
 
 - Generate HTML (from command line [[https://pandoc.org/][with Pandoc]] or [[https://stackoverflow.com/a/22091045/326516][Emacs]]) and publish
   the new version to some site your company views (optional, see
-  =org2connflu.zsh= script).
+  =org2conflu.zsh= script).
 
 - If your migrations aren't automatic as part of your CI, run your
   migration (or just load the new SQL file if you don't do
