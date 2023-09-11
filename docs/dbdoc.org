@@ -1,12 +1,12 @@
 #+Title: Pagila DB Documentation
 
+Some description of whole db. Keep it to exactly one paragraph.
+
 * film
 
 A *film*, aka movie, is released initially in theaters, and then
 available to movie /stores/, at which point they become available to
 the DB.
-
-
 
 - title ::
   The full name of the film, including things like sub-title and part
@@ -28,14 +28,7 @@ the DB.
 - rating ::
   MPAA rating: G, PG, PG-13, R, etc
 
-
-* actor
-
-An actor is very simple and non-comprehensive table to record the main
-headlining /stars/ of the film. All fields are obvious. Note that
-there may be duplicate actors that use slightly different names on occasion.
-
-* customer
+* fooschema.customer
 
 A movie store patron. A customer visits the store to rent a movie. We
 register them as a customer when they rent their first film.
@@ -49,6 +42,12 @@ register them as a customer when they rent their first film.
   The date that the customer creates an account; may be different from
   first rental date
 
+* actor
+
+An actor is very simple and non-comprehensive table to record the main
+headlining /stars/ of the film. All fields are obvious. Note that
+there may be duplicate actors that use slightly different names on occasion.
+
 * rental
 
 An instance of a film being rented from the /store/. Note that a
@@ -60,3 +59,10 @@ delinquent customer will not be allowed to create a new rental. #hot
 
 - rental-date ::
   The date at which a customer rents a movie
+
+- return-date ::
+  This is a dupe field
+
+* actor
+
+This is a dupe table.

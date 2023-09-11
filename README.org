@@ -1,12 +1,14 @@
 #+Title: DBDoc (Database Schema Documenter)
 
-Document your database schema (tables and columns), because your team
-will thank you, and this makes it easy.
+Document your database schema (tables and columns), because your team will
+thank you, and this makes it easy. You really need a [[https://en.wikipedia.org/wiki/Data_dictionary][Data Dictionary]] to
+describe your database. Your team will be living in chaos until you have one.
+DBDoc gives you a simple one that everyone can easily work with.
 
-DBDoc enables you to describe (via generated =COMMENT ON= statements)
-your relational database schema in a simple text file, which is easy
-for developers/DBAs to edit and search in the repo. The docs (each a
-snippet of a sentence or two) are then:
+DBDoc enables you to describe (via generated =COMMENT ON= statements) your
+relational database schema(s) in a simple text file, which is easy for
+developers/DBAs to edit and search in the repo. The docs (each a snippet of a
+sentence or a few, all in a single, versatile =dbdoc.org= file) are then:
 
 - *viewable in an SQL client* like DBeaver or Datagrip (the main use
   case) as tooltips and in other views
@@ -21,15 +23,24 @@ snippet of a sentence or two) are then:
   with an org presenter, like [[https://github.com/eschulte/epresent][epresent]] or [[https://github.com/takaxp/org-tree-slide][org-tree-slide]] (screenshot
   at bottom)
 
-It works by converting a very minimal ORG-valid and -prescribed syntax
-(top-level bullets, single paragraphs, and definition lists) into
-(long) [[https://www.postgresql.org/docs/current/sql-comment.html][SQL =COMMENT ON= statements]], which can be run automatically on
-your database (via migration or sourced or however you like).
+It works by running a simple =dbdoc= script to convert a very minimal
+ORG-valid and -prescribed syntax (top-level bullets, single paragraphs, and
+definition lists) into (long) [[https://www.postgresql.org/docs/current/sql-comment.html][SQL =COMMENT ON= statements]], which can be run
+automatically on your database (via migration or sourced or however you like).
 
 #+html: <p align="center"><img src="film-hover.png" title="DBeaver showing a hover on column/heading" /></p>
 #+caption: DBeaver showing a hover on column/heading
 
 _(See far below for more screenshots.)_
+
+** Changelog
+
+*** *2023-09-12* (all postgres-only)
+- Support non-=public= schemas (use =someschema.sometable= for top-level bullet)
+- Round-tripper: see data in DB not in ORG file
+- Round-tripper: see conflicts between DB and ORG file
+- Error checking for duplicate tables and fields in ORG file (common when
+  pasting from round-tripping)
 
 ** Example dbdoc.org file
 
@@ -97,14 +108,14 @@ difficult. That’s why this tiny tool exists.
 There is a testable =docs/dbdoc.org= example (and its generated SQL
 migration file =resources/migrations/20210804162056-dbdoc.up.sql=) in
 this repo that was written to minimally describe the [[https://github.com/devrimgunduz/pagila][pagila toy
-database]]. Just run =dbdoc.clj= in the root of this repo to try it out!
+database]]. Just run =dbdoc= in the root of this repo to try it out!
 
 ** Installation
 
-- Install [[https://github.com/babashka/babashka#installation][Babashka]].
+- Install [[https://github.com/babashka/babashka#installation][Babashka]] (any OS, tiny, fast, no dependencies).
 - Clone this repo and put its root on your =PATH=.
 
-Now you're ready to run =dbdoc.clj= from anywhere, and that's all
+Now you're ready to run =dbdoc= from anywhere, and that's all
 there is to it! Not even any CLI options. :)
 
 ** Documentation Process
@@ -132,10 +143,10 @@ there is to it! Not even any CLI options. :)
 
 1. Keep describing as many tables and columns as you see fit in your
    =docs/dbdoc.org= file. Every time a developer changes or adds a
-   field or table, they also put a sentence or two describing its
+   field or table, they also should put a sentence or two describing its
    purpose in the org file.
 
-2.  Run =dbdoc.clj= to generate a time-stamped file like
+2.  Run =dbdoc= to generate a time-stamped file like
    =resources/migrations/20201027000000-dbdoc.up.sql=. IMPORTANT!!
    Don't forget this step! (You don't need all the developers on the
    teams do this, so long as /someone/ does the generation/migrating
@@ -176,16 +187,16 @@ there is to it! Not even any CLI options. :)
 
 *** Transformations
 
-The parser is really limited and rigid and wants to see a _table_
+The parser is limited and rigid and wants to see a _table_
 description paragraph for every table you wish to document. So, if you
 want to document some column in a table, you must also provide at
-least a tidbit sentence for the table too. It's not a good parser so
+least a tidbit sentence for the table too. It's not a robust parser so
 just be careful. Alignment/indentation is important too, so follow the
 example format precisely – this is a tiny subset of actual org.
 
 Org uses underscores for italic, and it’s tedious enough to have to
 wrap every DB entity in equals (+=+) in org to escape them, so they
-should instead be documented with hyphens (=-=) (though this isn’t
+should instead be documented with hyphens ( =-= ) (though this isn’t
 required). IOW, all ORG hyphenated variables (eg, =my-var-name=)
 become underscores in SQL (=my_var_name=). So prefer to use
 =my-var-name= in the ORG description.
@@ -195,7 +206,12 @@ curlies so as not to need SQL string escaping (and be prettier).
 
 *** Git Diffs
 
-The =dbdoc.clj= script looks for an old migration file called
+The first version of your migration file is a direct mapping from =dbdoc.org=:
+it contains a =COMMENT ON= for each description. Then each time you run
+=dbdoc=, that migration file is maintained but renamed and always has a 1-to-1
+mapping of org descriptions to =COMMENT ON=.
+
+The =dbdoc= script looks for an old migration file called
 =<timestamp>-dbdoc.up.sql= and renames it (via =git-move=) to a
 present timestamp. This enables Git to see the the new migration as
 simply a change from the last run, and so you can easily see the
@@ -208,24 +224,46 @@ You can track progress of your documenting by noting how many tables
 have or have not been covered. Use the =coverage.zsh= script to offer
 a simple coverage report.
 
-*** Round-Tripping (coming soon maybe)
-
-If you already have comments on your tables, you can pull them into
-your ORG doc to still get the benefits of shared editing/viewing. So
-if some of your team happens to add comments inside a client on your
-production DB, round-tripping enables never losing data, and keeping
-your =dbcoc.org= as the SPOT. (This is maybe coming soon; probably
-not.)
-
 *** Seeding an ORG doc file for first-time use
 
-You can create a listing of all existing public tables as a starter
+You can create a listing of all existing tables as a starter
 ORG file: see =schema2org.zsh=. Once created, you can just start
 documenting! This is probably totally buggy; it's a tiny sed script
 working off a pg-dump.
 
 This may be improved to populate with existing comment descriptions
 to enable “round-tripping”.
+
+*** Round-Tripping (postgres only, for now)
+
+If you already have comments on your tables, you can pull them into your ORG
+doc (semi-manually) to still get the benefits of shared editing/viewing. So if
+some of your team happens to add comments (inside a client, or with =COMMENT
+ON= statements) to your production DB (instead of the using dbdoc process),
+/round-tripping/ ensures you never lose data, keeping your =dbcoc.org= as the
+SPOT and synced with the DB. But encourage your teammates not to be writing
+=COMMENT ON= statements and use dbdoc instead!
+
+To run the round-tripper, dbdoc needs access to an up-to-date, running DB
+instance. Export the =PGDATABASE= env var to specify that DB. It will query
+for all the descriptions and send them into a TSV =indb.tsv=. Then it converts
+the existing =dbdoc.org= texts (as inorg.tsv) to be able to diff and determine
+what's new. Run =roundtrip.zsh= to see it.
+
+#+begin_src shell
+PGDATABASE=mydb roundtrip.zsh >>docs/dbdoc.org # careful here with the append!
+#+end_src
+
+That output contains org formatted text. Rather than dbdoc trying to inject
+the new text into your hand-crafted =dbdoc.org= doc, it simply prints the new
+data in org-format to /stdout/, so that you can paste it into the appropriate
+places in your =dbdoc.org= file (or just append it as per that example). It is
+alphabetized, so simply appending may not be wanted if you're trying to keep
+your =dbdoc.org= file sorted by table name.
+
+If there are conflicts (same field described in both ORG and DB), those are
+WARNINGs printed to /stderr/, and you're expected to resolve and paste them into
+your =dbdoc.org= file with the description you feel is most up-to-date.
 
 *** FAQs
 

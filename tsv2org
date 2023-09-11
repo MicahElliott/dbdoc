@@ -1,0 +1,92 @@
+#!/usr/bin/env bb
+
+(ns tsv2org
+  "Identify inconsistencies between DB and ORG file, and print pasteable entries for ORG.
+
+  Called by `roundtrip.zsh` with pre-generated TSVs.
+
+  This includes items missing from ORG, and items in both DB and ORG that have are different.
+  This situation often occurs when:
+  - someone on the team (or outside) has been adding COMMENT statements manually
+  - a DB you're getting started with already has existing COMMENTs
+  "
+  (:require
+   [clojure.string :as str]
+   [clojure.pprint :as pp]
+   [clojure.data :as cd]
+   [clojure.data.csv :as csv]))
+
+(def projdir "./") ; Maybe let this project directory be changeable.
+
+(defn camelize [s] (str/replace s #"_" "-"))
+(defn read-tsv [fname] (csv/read-csv (slurp fname) :separator \tab))
+
+(defn reshape
+  "Create a map of keys like `myschema.mytable.myfield` to field descriptions.
+  Drop the `public` prefix for schema since default."
+  [acc row]
+  (let [row    (into (mapv camelize (take 3 row)) [(last row)])
+        schema (if (= (first row) "public") (second row) (str/join \. (take 2 row)))]
+    ;; (prn [schema (drop 2 row)])
+    ;; => ["credit-decisioning.applicant" ("created-at" "when this row was created; used for archival")]
+    (cons [schema (drop 2 row)] acc)))
+
+;; Translate the 4-col TSV to ORG, to stdout
+
+(defn print-missing-from-org
+  "Find fields present in DB that are missing from ORG file.
+  Requires that a `dbonly.tsv` file has already been created by upstream script."
+  []
+  (let [rows   (read-tsv (str projdir "dbonly.tsv"))
+        struct (reduce reshape (sorted-map) rows)
+        dict   (reduce (fn [acc [tab data]] (update acc tab conj data)) (sorted-map) struct #_xs)]
+    ;; (pp/pprint (reduce reshape {} rows))
+    (.println *err* "The following fields (sorted by table name, to stdout)")
+    (.println *err* "  do not exist in your dbdoc.org file, or are in conflict (see stderr below).")
+    (.println *err* "You should paste them in from here.")
+    (mapv (fn [[tab pairs]]
+            (println (str "\n* " tab))
+            (mapv (fn [[field desc]] (println (str "\n- " field " ::\n  " desc))) pairs))
+          dict)))
+
+(defn rows->map
+  "Convert TSV rows into a map keyed by first 3 cols."
+  [rows]
+  (reduce (fn [acc [scm tab fld desc]]
+            (assoc acc (str/join \. [scm tab fld]) desc))
+          {} rows))
+
+(defn print-conflicts-between-both
+  "Find fields present in both DB and ORG that have dissimilar descriptions."
+  []
+  (let [;;dbmap     {:a 11, :b 22, :c 33, :z "diff"}
+        ;; orgmap    {:a 11, :b :whoa, :d 33, :z "alsodiff"}
+        dbmap     (rows->map (read-tsv (str projdir "indb.tsv")))
+        orgmap    (rows->map (read-tsv (str projdir "inorg.tsv")))
+        ;; Grab the third coll from diff, the matches
+        same-keys (nth (cd/diff (set (keys dbmap)) (set (keys orgmap))) 2)
+        db2       (select-keys dbmap  same-keys)
+        org2      (select-keys orgmap same-keys)]
+    ;; (pp/pprint db2) (pp/pprint org2)
+    (mapv (fn [k] (let [dbk (get db2 k), orgk (get org2 k)]
+                    (when (not= dbk orgk)
+                      (.println *err* (format "\nCONFLICT FOR FIELD: %s\n  db:  %s\n  org: %s" k dbk orgk)))))
+          same-keys)))
+
+;
+;;; Main
+
+(print-missing-from-org)
+(print-conflicts-between-both)
+
+;
+;;; Experimenting
+
+(comment
+  (def xs [["credit-decisioning.applicant"
+            '("loanquote-data" "loanquote data used as input to the policies")]
+           ["credit-decisioning.applicant"
+            '("credit-facts" "facts from the credit reports used as input to the policies")]
+           ["credit-decisioning.boobs"
+            '("created-at" "when this row was created; used for archival")]])
+  :end)
