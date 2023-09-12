@@ -1,0 +1,44 @@
+#! /bin/zsh
+
+# Check migration file for existence of unsavory COMMENT ON statement, and reject build
+
+# Add lines like this to a `build.yml` file for github actions:
+
+# checks:
+#   steps:
+#   - name: Check for and block any COMMENT ON statements in mig files, insist on dbdoc
+#     run: ./deploy/bin/miglint
+
+# TODO Move this script to captain: https://github.com/MicahElliott/captain
+#      This will enable detecting which mig file etc.
+
+# Reject migs that have COMMENT ON statements, since we want those in dbdoc instead
+
+# NOTE If you absolutely must add a comment on, you can bypass this check by
+#      naming your mig like `dbdocbypass-whatever...`
+
+echo 'Checking for comment on statements in any migs'
+
+# Match mig files that are not dbdoc migs
+git fetch --quiet origin master:refs/remotes/origin/master
+migs=( $(git diff --name-only origin/master HEAD | grep -v dbdoc | grep '\.up\.sql') )
+
+if (( ${#migs[@]} == 0 )); then echo -e "No migs in this PR\nOK"; exit; fi
+
+culprits=( $(grep -Pilzo 'comment on ' $migs) )
+
+if (( ${#culprits[@]} > 0 )) ; then
+    echo "ERROR!"
+    echo "ERROR! You added a COMMENT ON statement in a migration file."
+    echo "ERROR!"
+    echo -e "\nCULPRITS:\n$culprits"
+    echo -e "\nWe are now enforcing that DB documentation should be done by adding entries to the docs/dbdoc.org file."
+    echo 'Please remove the comment and add it instead to PROJROOT/docs/dbdoc.org'
+    echo 'DBDoc is a setup we use to maintain database documentation is an org-file,'
+    echo 'which can be shared elsewhere and easily referenced.'
+    echo 'More info: https://github.com/MicahElliott/dbdoc'
+
+    exit 1 # block the build
+else
+    echo "OK"
+fi
