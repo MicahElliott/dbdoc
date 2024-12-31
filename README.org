@@ -115,6 +115,15 @@ database]]. Just run =dbdoc= in the root of this repo to try it out!
 - Install [[https://github.com/babashka/babashka#installation][Babashka]] (any OS, tiny, fast, no dependencies).
 - Clone this repo and put its root on your =PATH=.
 
+OR
+
+- Use [[https://github.com/babashka/bbin][bbin]] to install `dbdoc` as an
+  executable into =~/.local/bin=:
+
+  #+begin_src shell
+  bbin install io.github.micahelliott/dbdoc
+  #+end_src
+
 Now you're ready to run =dbdoc= from anywhere, and that's all
 there is to it! Not even any CLI options. :)
 
