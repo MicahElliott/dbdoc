@@ -4,7 +4,7 @@ pre_commit=(
     'hithere: echo  ## just print changed files'
     # mdlint
     cljfmt
-    cljlint # won't work since no longer a .clj file
+    'cljlint(dbdoc)' # won't work since no longer a .clj file
     fixcheck
     wscheck
 )

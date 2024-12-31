@@ -1,1 +1,1 @@
-{:bbin/bin {dbdoc {:main-opts ["dbdoc"]}}}
+{:bbin/bin {dbdoc {:main-opts ["-f" "dbdoc"]}}}
