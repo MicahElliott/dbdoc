@@ -118,7 +118,7 @@ database]]. Just run =dbdoc= in the root of this repo to try it out!
 Now you're ready to run =dbdoc= from anywhere, and that's all
 there is to it! Not even any CLI options. :)
 
-** Documentation Process
+** Documentation Process (Usage)
 
 *** One time only
 
@@ -146,7 +146,7 @@ there is to it! Not even any CLI options. :)
    field or table, they also should put a sentence or two describing its
    purpose in the org file.
 
-2.  Run =dbdoc= to generate a time-stamped file like
+2. Run =dbdoc= to generate a time-stamped file like
    =resources/migrations/20201027000000-dbdoc.up.sql=. IMPORTANT!!
    Don't forget this step! (You don't need all the developers on the
    teams do this, so long as /someone/ does the generation/migrating
